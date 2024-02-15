@@ -1,4 +1,12 @@
+let playerScore = 0;
+let computerScore = 0;
 const options = ["rock", "paper", "scissor"];
+const rockButton = document.getElementById('rock');
+const paperButton = document.getElementById('paper');
+const scissorButton = document.getElementById('scissor');
+const resultDiv = document.querySelector('.result');
+const playerScoreSpan = document.querySelector('.player-score');
+const computerScoreSpan = document.querySelector('.computer-score');
 
 function getComputerChoice(){
     const choice = options[Math.floor(Math.random() * options.length)];
@@ -26,55 +34,62 @@ function checkWinner(playerSelection, computerSelection){
 function playRound (playerSelection, computerSelection){
     const result = checkWinner(playerSelection, computerSelection);
     if (result == "Tie"){
-        return "It's a Tie!"
+        const p = document.createElement('p');
+        p.innerText = `It's a Tie! You both picked ${playerSelection}`;
+        resultDiv.appendChild(p);
     }
     else if (result == "player"){
-        return `You win! ${playerSelection} beats ${computerSelection}`;
+        playerScore++
+        const p = document.createElement('p');
+        p.innerText = `You win! ${playerSelection} beats ${computerSelection}`;
+        resultDiv.appendChild(p);
     }
     else{
-        return `You lose! ${computerSelection} beats ${playerSelection}`;
+        computerScore++
+        const p = document.createElement('p');
+        p.innerText = `You lose! ${computerSelection} beats ${playerSelection}`;
+        resultDiv.appendChild(p);
     }
 }
 
-function getPlayerChoice(){
-    let validatedInput = false;
-    while(validatedInput == false){
-        const choice = prompt("Input Rock, Paper or Scissor");
-        if (choice == null){
-            continue;
-        }
-        const choiceInLower = choice.toLowerCase();
-        if(options.includes(choiceInLower)){
-            validatedInput = true;
-            return choiceInLower;
-        }
+const getScore = (playerScore, computerScore) => {
+    if (playerScore === 5) {
+        const h2 = document.createElement('h2');
+        h2.innerText = `You are the Winner! ${playerScore} out of ${computerScore}`
+        resultDiv.append(h2);
     }
+    if (computerScore === 5) {
+        const h2 = document.createElement('h2');
+        h2.innerText = `Computer Wins! ${computerScore} out of ${playerScore}`
+        resultDiv.append(h2);
+    }    
 }
 
-function game(){
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++){
-        const playerSelection = getPlayerChoice();
-        const computerSelection = getComputerChoice();
-        console.log(playRound(playerSelection,computerSelection));
-        console.log("-----------------------");
-        if(checkWinner(playerSelection,computerSelection) == "player"){
-            playerScore++
-        }
-        else if(checkWinner(playerSelection,computerSelection) == "computer"){
-            computerScore++
-        }
-    }
-    console.log("Game Over");
-    if(playerScore > computerScore){
-        console.log("You are the Winner!");
-    }
-    else if(computerScore > playerScore){
-        console.log("Computer was the Winner!");
-    }
-    else{
-        console.log("We have a Tie!");
-    }
+const printScore = (playerScore, computerScore) => {
+    playerScoreSpan.innerText = `Player score:  ${playerScore}`
+    computerScoreSpan.innerText = `Computer score:  ${computerScore}`
 }
-game();
+
+rockButton.addEventListener('click', () => {
+    const playerSelection = "rock";
+    const computerSelection = getComputerChoice();
+    playRound(playerSelection,computerSelection);
+    getScore(playerScore,computerScore);
+    printScore(playerScore, computerScore);
+});
+
+paperButton.addEventListener('click', () => {
+    const playerSelection = "paper";
+    const computerSelection = getComputerChoice();
+    playRound(playerSelection,computerSelection);
+    getScore(playerScore,computerScore);
+    printScore(playerScore, computerScore);
+});
+
+scissorButton.addEventListener('click', () => {
+    const playerSelection = "scissor";
+    const computerSelection = getComputerChoice();
+    playRound(playerSelection,computerSelection);
+    getScore(playerScore,computerScore);
+    printScore(playerScore, computerScore);
+});
